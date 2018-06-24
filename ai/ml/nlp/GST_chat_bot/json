@@ -1,0 +1,5 @@
+{
+  "pipeline": "spacy_sklearn",
+  "path" : "./",
+  "data" : "F:/StudyMaterial/Efforts/technical/Machine Learning/pyCharmWorkspace/data_science/data/testData_for_chatbot.json"
+}

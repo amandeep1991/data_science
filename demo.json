@@ -1,0 +1,9 @@
+a = 1.0
+type(a)
+float
+type(1)
+int
+type(1+1j)
+complex
+type(’hello’)
+str
