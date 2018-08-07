@@ -1,0 +1,5 @@
+GitLab = Code Repository
+Jenkins = Builds Containers
+Docker = container engine
+Kubernates = Running containers (manages containers)
+ELK = monitoring

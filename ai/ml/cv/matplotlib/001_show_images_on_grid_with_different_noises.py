@@ -3,10 +3,10 @@ import matplotlib
 import cv2
 import numpy as np
 
-from directory_utils import change_directory_to_data
+from directory_utils import add_resources_to_path
 from ml.utils.visual_utils import show_grid_via_matplotlib
 
-absolute_input_image_path = change_directory_to_data() + "/001_TheGorgeousDishaPatani.jpg"
+absolute_input_image_path = add_resources_to_path() + "/001_TheGorgeousDishaPatani.jpg"
 gorgeous_disha = cv2.imread(absolute_input_image_path, cv2.IMREAD_COLOR)
 gorgeous_disha = matplotlib.image.imread(absolute_input_image_path, cv2.IMREAD_COLOR)
 
