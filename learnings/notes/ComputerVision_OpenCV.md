@@ -170,11 +170,190 @@ Both eyes & camera use an adaptive lens to control:
     `cap.release()`<BR>
     `cv2.destroyAllWindows()`<BR>
     
+17. Contours: [More about contours - area, centroid, fitting circle or line etc](https://docs.opencv.org/3.4.2/dd/d49/tutorial_py_contour_features.html)
+    -  Find & draw contours:
+        - `gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)`    
+        - `edged = cv2.Canny(gray, 30, 200)`    
+        - `# Use a copy of your image e.g. edged.copy(), since findContours alters the image`    
+        - `image, contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)`
+            - 'hierarchy' describes the child-parent relationships between contours (i.e. contours within contours)
+            - Approximation Methods (3rd Parameter):
+                - cv2.CHAIN_APPROX_NONE: 
+                    - stores all the boundary points. 
+                    - But we don't necessarily need all bounding points. 
+                    - If the points form a straight line, we only need the start and ending points of that line.
+                - cv2.CHAIN_APPROX_SIMPLE: 
+                    - instead only provides these start and end points of bounding contours.
+                    - Thus resulting in much more efficent storage of contour information.
+            - Retrieval Modes (Hierarchy Types): https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.html#contours-hierarchy
+                - cv2.RETR_LIST: Retrieves all contours
+                - cv2.RETR_EXTERNAL: Retrieves external or outer contours only
+                - cv2.RETR_CCOMP: Retrieves all in a 2-level hierarchy
+                - cv2.RETR_TREE: Retrieves all in full hierarchy
+                - cv2.RETR_FLOODFILL: 
+        - `# Use '-1' as the 3rd parameter to draw all`    
+        - `cv2.drawContours(image, contours, -1, (0,255,0), 3)` 
     
-
-
+    - Sorting Contours:
+        - By Area:
+          ```python
+              area = cv2.contourArea(contour_from_contour_list_we_get_from_findContours_method)
+              
+              #Sort contours large to small, above line is just to get area, but not required for below sorting
+              sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
+          ```
+  
+        - By spatial position (LEFT-to-RIGHT): **OPEN-CV left topmost point is 0,0**
+          ```python
+            def x_cord_contour(contours):
+                #Returns the X cordinate for the contour centroid
+                if cv2.contourArea(contours) > 10:
+                    M = cv2.moments(contours)
+                    return (int(M['m10']/M['m00']))
+            
+            
+            def label_contour_center(image, c):
+                # Places a red circle on the centers of contours
+                M = cv2.moments(c)
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
+                # Draw the countour number on the image
+                cv2.circle(image,(cx,cy), 10, (0,0,255), -1)
+                return image
+            
+            # Labeling Contours left to right
+            for (i,c)  in enumerate(contours_left_to_right):
+                cv2.drawContours(orginal_image, [c], -1, (0,0,255), 3)  
+                M = cv2.moments(c)
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
+                cv2.putText(orginal_image, str(i+1), (cx, cy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                cv2.imshow('6 - Left to Right Contour', orginal_image)
+                cv2.waitKey(0)
+                (x, y, w, h) = cv2.boundingRect(c)
+                # Let's now crop each contour and save these images
+                cropped_contour = orginal_image[y:y + h, x:x + w]
+                image_name = "output_shape_number_" + str(i+1) + ".jpg"
+                print(image_name)
+                # cv2.imwrite(image_name, cropped_contour)
+                cv2.imshow(image_name, cropped_contour)
+          ```
+    - Approximate Contours + Convex Hull:-
+        - **cv2.approxPolyDP(contour, Approximation Accuracy, Closed)**
+            - **contour** – is the individual contour we wish to approximate
+            - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter
+            - **Closed** – a Boolean value that states whether the approximate contour should be open or closed
+        ```python
+              _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+              # Iterate through each contour and compute the approx contour
+              for c in contours:
+                  # Calculate accuracy as a percent of the contour perimeter
+                  accuracy = 0.03 * cv2.arcLength(c, True)
+                  approx = cv2.approxPolyDP(c, accuracy, True)
+                  cv2.drawContours(image, [approx], 0, (0, 255, 0), 2)
+                  cv2.imshow('Approx Poly DP', image)
+        ```
+        - **Convex Hull**:
+        ```python
+              _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+              # Sort Contours by area and then remove the largest frame contour
+              n = len(contours) - 1
+              contours = sorted(contours, key=cv2.contourArea, reverse=False)[:n]
+              # Iterate through contours and draw the convex hull
+              for c in contours:
+                  hull = cv2.convexHull(c)
+                  cv2.drawContours(image, [hull], 0, (0, 255, 0), 2)
+                  cv2.imshow('Convex Hull', image)
+        ``` 
+18. Shape Matching: (Shape can be identified by number of minimum points to remember contour or approxPolyDP)
+    - **cv2.matchShapes(contour template, contour, method, method parameter)**
+    - **Output** – match value (lower values means a closer match)
+        - **Contour Template** – This is our reference contour that we’re trying to find in the new image
+        - **Contour** – The individual contour we are checking against
+        - **Method** – Type of contour matching (1, 2, 3) [More Details here](http://docs.opencv.org/2.4/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html)
+        - **Method** Parameter – leave alone as 0.0 (not fully utilized in python OpenCV)
+    ```python
+            # Find contours in template
+            _, contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            
+            # We need to sort the contours by area so that we can remove the largest
+            # contour which is the image outline
+            sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
+            
+            # We extract the second largest contour which will be our template contour
+            template_contour = contours[1]
+            
+            # Extract contours from second target image
+            _, contours, hierarchy = cv2.findContours(thresh2, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            
+            for c in contours:
+                # Iterate through each contour in the target image and 
+                # use cv2.matchShapes to compare contour shapes
+                match = cv2.matchShapes(template_contour, c, 1, 0.0)
+                print(match)
+                # If the match value is less than 0.15 we
+                if match < 0.15:
+                    closest_contour = c
+                else:
+                    closest_contour = [] 
+                            
+            cv2.drawContours(target, [closest_contour], -1, (0,255,0), 3)
+            cv2.imshow('Output', target)
+    ```
+19. Line Detection:
+    - **cv2.HoughLines**(binarized/thresholded image, 𝜌 accuracy, 𝜃 accuracy, threshold)
+        - Threshold here is the minimum vote for it to be considered a line
+        ```python
+                # Grayscale and Canny Edges extracted
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
+                #cv2.imshow("Canny",edges)
+                
+                # Run HoughLines using a rho accuracy of 1 pixel
+                # theta accuracy of np.pi / 180 which is 1 degree
+                # Our line threshold is set to 240 (number of points on line)
+                lines = cv2.HoughLines(edges, 1, np.pi / 180, 240)
+                
+                # We iterate through each line and convert it to the format
+                # required by cv.lines (i.e. requiring end points)
+                for rho, theta in lines[0]:
+                    a = np.cos(theta)
+                    b = np.sin(theta)
+                    x0 = a * rho
+                    y0 = b * rho
+                    x1 = int(x0 + 1000 * (-b))
+                    y1 = int(y0 + 1000 * (a))
+                    x2 = int(x0 - 1000 * (-b))
+                    y2 = int(y0 - 1000 * (a))
+                    cv2.line(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                
+                cv2.imshow('Hough Lines', image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+        ```
+    - **cv2.HoughLinesP**(binarized image, 𝜌 accuracy, 𝜃 accuracy, threshold, minimum line length, max line gap)
+        ```python
+                # Grayscale and Canny Edges extracted
+                image = cv2.imread('images/soduku.jpg')
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
+                
+                # Again we use the same rho and theta accuracies
+                # However, we specific a minimum vote (pts along line) of 100
+                # and Min line length of 5 pixels and max gap between lines of 10 pixels
+                lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 200, 5, 10)
+                print(lines.shape)
+                
+                for x1, y1, x2, y2 in lines[0]:
+                    cv2.line(image, (x1, y1), (x2, y2),(0, 255, 0), 3)
+                
+                cv2.imshow('Probabilistic Hough Lines', image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+        ```
+        
 **Image Manipulation**:
-1. Transformations:
+1. **Transformations**:
     - Geometric distortions enacted upon an image
     - Used to correct distortions or perspective issues from arising from the point of view an image was captured.
     - Types (different categories of classification but we will talk about main):
@@ -182,7 +361,7 @@ Both eyes & camera use an adaptive lens to control:
         - Non-Affine: (Projective Transformation or Homography)
             - It doesn't preserve parallelism, length and angle. It does however preserve collinearity and incidence (two adjacent point will remain adjacent.)
             - Mainly because of different camera perspectives.
-2. Edge Detections:
+2. **Edge Detections**:
     - Very important especially when dealing with contours.
     - Edges can be defined as sudden changes (discontinuities) in an image and they can encode just as much information as pixels. These capture important information generally sufficient to identify an object but scenarios could be complex.
 ![04_EdgeDetection.jpg](images/04_EdgeDetection.jpg)    
@@ -195,8 +374,159 @@ Both eyes & camera use an adaptive lens to control:
         -  Finds intensity gradient of the image
         - Applied non-maximum suppression (i.e removes pixels that are not edges)
         - Hysteresis - Applies thresholds (i.e if pixel is within the upper and lower thresholds, it is considered an edge)
-        
-        
+3. **Image Segmentation**
+    - Partitioning images into different regions.
+    - Different Techniques:
+        - Contours: Are continuous lines or curves that bound or cover the full boundary of an object in an image.
+            - Very important in : Object Detection, Shape Analysis
+            - Open-CV's findContours require gray-scale image otherwise it will throw an error.
+                - findContours doesn't require image to be passed to Canny Algorithm but if passed it will remove a lot of noise and hence let to easy processing (can help to reduce the number of unnecessary contours).
+                - open-cv stores contours as a list of list. List contour1 stores all the points of one contour as a list for example.
+            - **Sorting Contours**:
+                - **Sorting by Area** can assist in Object Recognition (using contours area).
+                    - Eliminate small contours that may be noise.
+                    - Extract the largest contour
+                - **Sorting by spatial position**: using the contours centroid
+                    - Sort characters left to right.
+                    - Process images in specific order.
+                - It is usually a good technique to find contours and draw it on a blank white or black backgroud.
+        - Line Detection
+            
+                ![05_LineDetection.jpg](05_LineDetection.jpg)
+            - open-cv stores line as per above equation where 
+                - p is the perpendicular distance from origin
+                - theta is the angle formed by the normal of this line to the origin
+            - Two types of algorithms:
+                - Hough Lines: Threshold is the minimum vote to be considered a line
+                - Probabilitic Hough Lines:
+                    - Idea is that it takes only a random subset of points sufficient enough for line detection.
+                    - Also returns the start and end points of the line unlike the previous function.
+            
+        - Circle Detection
+        - Blob Detection:
+            - Blobs can be described as groups of connected pixels that all share a common property.
+            - Steps for open-cv:
+                - Create Detector
+                - Input image into Detector
+                - Obtain key points
+                - Draw key points
+            ```python
+                    # Read image
+                    image = cv2.imread("images/Sunflowers.jpg")
+                     
+                    # Set up the detector with default parameters.
+                    detector = cv2.SimpleBlobDetector_create()
+                     
+                    # Detect blobs.
+                    keypoints = detector.detect(image)
+                     
+                    # Draw detected blobs as red circles.
+                    # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of
+                    # the circle corresponds to the size of blob
+                    blank = np.zeros((1,1)) 
+                    blobs = cv2.drawKeypoints(image, keypoints, blank, (0,255,255),
+                                                          cv2.DRAW_MATCHES_FLAGS_DEFAULT)
+                     
+                    # Show keypoints
+                    cv2.imshow("Blobs", blobs)
+                    cv2.waitKey(0)
+                    cv2.destroyAllWindows()
+            ```
+            
+            - The function **cv2.drawKeypoints** takes the following arguments:
+                - **cv2.drawKeypoints**(input image, keypoints, blank_output_array, color, flags)
+                - flags:
+                    - **cv2.DRAW_MATCHES_FLAGS_DEFAULT**
+                    - **cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS**
+                    - **cv2.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG**
+                    - **cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS**
+                    
+            - Detect ellipses:
+            ```python
+                      # Intialize the detector using the default parameters
+                      detector = cv2.SimpleBlobDetector_create()
+                         
+                      # Detect blobs
+                      keypoints = detector.detect(image)
+                         
+                      # Draw blobs on our image as red circles
+                      blank = np.zeros((1,1)) 
+                      blobs = cv2.drawKeypoints(image, keypoints, blank, (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+            
+                      number_of_blobs = len(keypoints)
+                      text = "Total Number of Blobs: " + str(len(keypoints))
+                      cv2.putText(blobs, text, (20, 550), cv2.FONT_HERSHEY_SIMPLEX, 1, (100, 0, 255), 2)
+            
+                      # Display image with blob keypoints
+                      cv2.imshow("Blobs using default parameters", blobs)
+                      cv2.waitKey(0)
+            ```
+            - Detect ellipses and circles separately:
+            ```python
+                        # Set our filtering parameters
+                        # Initialize parameter settiing using cv2.SimpleBlobDetector
+                        params = cv2.SimpleBlobDetector_Params()
+                        
+                        # Set Area filtering parameters
+                        params.filterByArea = True
+                        params.minArea = 100
+                        
+                        # Set Circularity filtering parameters
+                        params.filterByCircularity = True 
+                        params.minCircularity = 0.9
+                        
+                        # Set Convexity filtering parameters
+                        params.filterByConvexity = False
+                        params.minConvexity = 0.2
+                            
+                        # Set inertia filtering parameters
+                        params.filterByInertia = True
+                        params.minInertiaRatio = 0.01
+                        
+                        # Create a detector with the parameters
+                        detector = cv2.SimpleBlobDetector_create(params)
+                            
+                        # Detect blobs
+                        keypoints = detector.detect(image)
+                        
+                        # Draw blobs on our image as red circles
+                        blank = np.zeros((1,1)) 
+                        blobs = cv2.drawKeypoints(image, keypoints, blank, (0,255,0), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                        
+                        number_of_blobs = len(keypoints)
+                        text = "Number of Circular Blobs: " + str(len(keypoints))
+                        cv2.putText(blobs, text, (20, 550), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 100, 255), 2)
+            ```
+            - Blob filtering shape & size: **cv2.SimpleBlobDetector_Params()**
+                - Area: (to see all blobs having area in given range)
+                    - params.filterByArea=True/False
+                    - params.minArea = pixels
+                    - params.maxArea = pixels
+                - Circularity: ()
+                    - params.filterByCircularity = True/False
+                    - params.minCircularity = 1 being perfect circle, 0 the opposite
+                - Convexity: (Area of blob **divide** Area of Convex Hull)
+                    - params.filterByConvexity = True/False
+                    - params.minConvexity= 0 to 1
+                - Inertia: Measure of ellipticalness (low being more elliptical, high being more circular)
+                    - params.filterByInertia = True/False
+                    - params.minInertiaRatio = 0.01 (high means more circular)                
+
+**Random**
+1. Moments: [More About image-moments](http://www.aishack.in/tutorials/image-moments/)
+    - If the **points** represent **mass**, 
+        - then the zeroth moment is the total mass, 
+        - the first moment divided by the total mass is the center of mass
+        - the second moment is the rotational inertia. 
+    - If the **points** represent **probability density**, 
+        - then the zeroth moment is the total probability (i.e. one), 
+        - the first moment is the mean, 
+        - the second moment is the variance, 
+        - the third moment is the skewness, and 
+        - the fourth moment (with normalization and shift) is the kurtosis
+    - Tells: Area, centroid, Orientation
+    
+2. Hu Moments: Invariant to translation, scale and rotation (orientation as well).        
 
  
     
