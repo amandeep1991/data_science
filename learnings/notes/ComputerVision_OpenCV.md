@@ -45,6 +45,7 @@ Both eyes & camera use an adaptive lens to control:
 
 
 **Playing with OpenCV**
+
     ```python
         cv2.imread(<file>) ## opencv doesn't support reading .gif image by it's own, we need other third party module for the same
         cv2.imshow(<LabelOfWindow>, <NumpyArrayForImage>)
@@ -52,7 +53,9 @@ Both eyes & camera use an adaptive lens to control:
         cv2.cvtColor(<NumpyArrayForImage>, cv2.BGR2GRAY) #Grayscaling
         cv2.imread(<file>, 0) #Grayscaling
     ```
+    
 <BR>**NOTE** A lot of algorithms/APIs in open-cv require you to first convert the image into gray scaled image (reason being they are easy to process as they have less information but important ones - that's why black & white TV worked fine colors were just a bonus to it but are not necessary)
+    
     ```python
         B, G, R = image[10, 50] # BGR Values for the first 0,0 pixel
     ```
