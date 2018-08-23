@@ -230,6 +230,37 @@ Both eyes & camera use an adaptive lens to control:
             
             cv2.imshow('warpPerspective', warped)
         ```
+        - Tested Code: Output is shown below
+        ```python
+            image_new = image.copy()
+
+            # Cordinates of the 4 corners of the original image
+            left_top_point = [32, 30]
+            right_top_point = [170, 33]
+            left_bottom_point = [18, 212]
+            right_bottom_point = [153, 200]
+            initial_points = [left_top_point, right_top_point, left_bottom_point, right_bottom_point]
+            for point in initial_points:
+                cv2.circle(image_new, tuple(point), 10, (0, 0, 255), 2)
+
+            cv2.imshow("1. Original", image_new)
+
+            points_A = np.float32(initial_points)
+            # Coordinates of the 4 corners of the desired output
+            # We use a ratio of an A4 Paper 1 : 1.41
+            points_B = np.float32([[0, 0], [238, 0], [0, 212], [238, 212]])
+            M = cv2.getPerspectiveTransform(points_A, points_B)
+            warped = cv2.warpPerspective(image, M, (238, 212))
+            cv2.imshow('2. warpPerspective', warped)
+
+            M = cv2.getPerspectiveTransform(points_B, points_A)
+            warped = cv2.warpPerspective(warped, M, (238, 212))
+            cv2.imshow('3. Reverting Back', warped)
+
+            cv2.waitKey()        
+        ```
+        ![03c_NoneAffine_Example.jpg](images/03c_NoneAffine_Example.jpg)
+        
     - Affine:
         ```python
             points_A = np.float32([[320,15], [700,215], [85,610]])
