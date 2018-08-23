@@ -184,8 +184,8 @@ Both eyes & camera use an adaptive lens to control:
             cv2.imshow('Canny', canny)
         ```
         
-        
-        ```python [Output of this python code is shown below]
+    - Demo of these 3 algorithms:: [Output of this python code is shown below]
+        ```python 
             def test(ksize=5):
                 output_datatype = cv2.CV_64F
                 show_detection_outputs(ksize, output_datatype)
@@ -216,70 +216,91 @@ Both eyes & camera use an adaptive lens to control:
         
 15. Getting Perspective:
     - Non-Affine:
-        - -# Cordinates of the 4 corners of the original image
-        - points_A = np.float32([[320,15], [700,215], [85,610], [530,780]])
-        - -# Cordinates of the 4 corners of the desired output
-        - -# We use a ratio of an A4 Paper 1 : 1.41
-        - points_B = np.float32([[0,0], [420,0], [0,594], [420,594]])
-        - M = cv2.getPerspectiveTransform(points_A, points_B)
-        - warped = cv2.warpPerspective(image, M, (420,594))
-        - cv2.imshow('warpPerspective', warped)
+        ```python
+            # Cordinates of the 4 corners of the original image
+            points_A = np.float32([[320,15], [700,215], [85,610], [530,780]])
+            
+            # Cordinates of the 4 corners of the desired output
+            # We use a ratio of an A4 Paper 1 : 1.41
+            points_B = np.float32([[0,0], [420,0], [0,594], [420,594]])
+            
+            M = cv2.getPerspectiveTransform(points_A, points_B)
+            
+            warped = cv2.warpPerspective(image, M, (420,594))
+            
+            cv2.imshow('warpPerspective', warped)
+        ```
     - Affine:
-        - points_A = np.float32([[320,15], [700,215], [85,610]])
-        - points_B = np.float32([[0,0], [420,0], [0,594]])
-        - M = cv2.getAffineTransform(points_A, points_B)
-        - warped = cv2.warpAffine(image, M, (cols, rows))
-        - cv2.imshow('warpAffine', warped)
+        ```python
+            points_A = np.float32([[320,15], [700,215], [85,610]])
+            
+            points_B = np.float32([[0,0], [420,0], [0,594]])
+            
+            M = cv2.getAffineTransform(points_A, points_B)
+            
+            warped = cv2.warpAffine(image, M, (cols, rows))
+            
+            cv2.imshow('warpAffine', warped)
+        ```
 16. Sketch from Web-cam, live:
-    `# Our sketch generating function`<BR><BR>
-    `def sketch(image):`<BR>
-    `    # Convert image to grayscale`<BR>
-    `    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)`<BR>
-    `    # Clean up image using Guassian Blur`<BR>
-    `    img_gray_blur = cv2.GaussianBlur(img_gray, (5,5), 0)`<BR>
-    `    # Extract edges`<BR>
-    `    canny_edges = cv2.Canny(img_gray_blur, 10, 70)`<BR>
-    `    # Do an invert binarize the image`<BR> 
-    `    ret, mask = cv2.threshold(canny_edges, 70, 255, cv2.THRESH_BINARY_INV)`<BR>
-    `    return mask`<BR>
-<BR>    
-    `cap = cv2.VideoCapture(0)`<BR>
-<BR>
-    `while True:`<BR>
-    `    ret, frame = cap.read()`<BR>
-    `    cv2.imshow('Our Live Sketcher', sketch(frame))`<BR>
-    `    if cv2.waitKey(1) == 13: #13 is the Enter Key`<BR>
-    `        break`<BR>
-<BR>            
-    `-# Release camera and close windows`<BR>
-    `cap.release()`<BR>
-    `cv2.destroyAllWindows()`<BR>
+    ```python
+        # Our sketch generating function
+        def sketch(image):
+            # Convert image to grayscale
+            img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # Clean up image using Guassian Blur
+            img_gray_blur = cv2.GaussianBlur(img_gray, (5,5), 0)
+            # Extract edges
+            canny_edges = cv2.Canny(img_gray_blur, 10, 70)
+            # Do an invert binarize the image
+            ret, mask = cv2.threshold(canny_edges, 70, 255, cv2.THRESH_BINARY_INV)
+            return mask
+
+        cap = cv2.VideoCapture(0)
+
+        while True:
+            ret, frame = cap.read()
+            cv2.imshow('Our Live Sketcher', sketch(frame))
+            if cv2.waitKey(1) == 13: #13 is the Enter Key
+                break
+            
+        # Release camera and close windows
+        cap.release()
+        cv2.destroyAllWindows()
+    ```
     
 17. Contours: [More about contours - area, centroid, fitting circle or line etc](https://docs.opencv.org/3.4.2/dd/d49/tutorial_py_contour_features.html)
     -  Find & draw contours:
-        - `gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)`    
-        - `edged = cv2.Canny(gray, 30, 200)`    
-        - `# Use a copy of your image e.g. edged.copy(), since findContours alters the image`    
-        - `image, contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)`
+        ```python
+            gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)`    
+            edged = cv2.Canny(gray, 30, 200)`    
+            
+            # Use a copy of your image e.g. edged.copy(), since findContours alters the image`    
+            image, contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)`
+        ```
+            
             - 'hierarchy' describes the child-parent relationships between contours (i.e. contours within contours)
             - Approximation Methods (3rd Parameter):
-                - cv2.CHAIN_APPROX_NONE: 
+                - **cv2.CHAIN_APPROX_NONE**: 
                     - stores all the boundary points. 
                     - But we don't necessarily need all bounding points. 
                     - If the points form a straight line, we only need the start and ending points of that line.
-                - cv2.CHAIN_APPROX_SIMPLE: 
+                - **cv2.CHAIN_APPROX_SIMPLE**: 
                     - instead only provides these start and end points of bounding contours.
                     - Thus resulting in much more efficent storage of contour information.
+                    
             - Retrieval Modes (Hierarchy Types): https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.html#contours-hierarchy
                 - cv2.RETR_LIST: Retrieves all contours
                 - cv2.RETR_EXTERNAL: Retrieves external or outer contours only
                 - cv2.RETR_CCOMP: Retrieves all in a 2-level hierarchy
                 - cv2.RETR_TREE: Retrieves all in full hierarchy
                 - cv2.RETR_FLOODFILL: 
-        - `# Use '-1' as the 3rd parameter to draw all`    
-        - `cv2.drawContours(image, contours, -1, (0,255,0), 3)` 
+        ```python    
+            # Use '-1' as the 3rd parameter to draw all
+            cv2.drawContours(image, contours, -1, (0,255,0), 3)
+        ```
     
-    - Sorting Contours:
+    - **Sorting Contours**:
         - By Area:
           ```python
               area = cv2.contourArea(contour_from_contour_list_we_get_from_findContours_method)
@@ -289,6 +310,7 @@ Both eyes & camera use an adaptive lens to control:
           ```
   
         - By spatial position (LEFT-to-RIGHT): **OPEN-CV left topmost point is 0,0**
+
           ```python
             def x_cord_contour(contours):
                 #Returns the X cordinate for the contour centroid
