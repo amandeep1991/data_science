@@ -45,7 +45,6 @@ Both eyes & camera use an adaptive lens to control:
 
 
 **Playing with OpenCV**
-
     ```python
         cv2.imread(<file>) ## opencv doesn't support reading .gif image by it's own, we need other third party module for the same
         cv2.imshow(<LabelOfWindow>, <NumpyArrayForImage>)
@@ -54,8 +53,7 @@ Both eyes & camera use an adaptive lens to control:
         cv2.imread(<file>, 0) #Grayscaling
     ```
     
-<BR>**NOTE** A lot of algorithms/APIs in open-cv require you to first convert the image into gray scaled image (reason being they are easy to process as they have less information but important ones - that's why black & white TV worked fine colors were just a bonus to it but are not necessary)
-    
+**NOTE** A lot of algorithms/APIs in open-cv require you to first convert the image into gray scaled image (reason being they are easy to process as they have less information but important ones - that's why black & white TV worked fine colors were just a bonus to it but are not necessary)
     ```python
         B, G, R = image[10, 50] # BGR Values for the first 0,0 pixel
     ```
@@ -125,42 +123,97 @@ Both eyes & camera use an adaptive lens to control:
                     ![02b_TranslationExample.jpg](images/02b_TranslationExample.jpg)
     
 11. Rotation: to scale & rotate at the same time
-    - rotation_matrix = cv2.getRotationMatrix2D((width/2, height/2), 90, .5) #.5 is the scaling factor, 90 is anti-clockwise rotation angle (now since canvas remain the same change of shape might cause other area to be cropped or black boundary)
-    - rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
-    - To avoid that cropping or black areas issues, can use below for 90 degree thing:
-        - cv2.transpose(img)
-        - flipped = cv2.flip(image, 0) # for 180 degree rotation
-12. Interpolation:
-    - Interpolation is the method of constructing new data points within the range of discrete set of known data points
-    - Different Algorithms:
+    ```python
+        # .5 is the scaling factor, 90 is anti-clockwise rotation angle
+        rotation_matrix = cv2.getRotationMatrix2D((width/2, height/2), 90, .5)
+        # Now since canvas remain the same change of shape might cause other area to be cropped or black boundary)
+        
+        rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
+        
+        # To avoid that cropping or black areas issues, can use below for 90 degree thing:
+        cv2.transpose(img)
+        flipped = cv2.flip(image, 0) # for 180 degree rotation
+    ```
+
+12. **Interpolation**:
+    - Interpolation is the method of constructing new data points within the range of discrete set of known data points.
+    
+    - **Different Algorithms**:
         - INTER_NEAREST (**Fastest**) - a nearest-neighbor interpolation 
         - INTER_LINEAR (**Good for zooming and upscaling**) - a bilinear interpolation (used by default) 
-        - INTER_AREA (**Good for shrinking and downsampling**) - resampling using pixel area relation. It may be a preferred method for image decimation, as it gives moire’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method. 
+        - INTER_AREA (**Good for shrinking and downsampling**) - resampling using pixel area relation. It may be a preferred method for image decimation, as it gives more’-free results. But when the image is zoomed, it is similar to the INTER_NEAREST method. 
         - INTER_CUBIC (**BETTER**) - a bicubic interpolation over 4x4 pixel neighborhood 
         - INTER_LANCZOS4 (**BEST**) - a Lanczos interpolation over 8x8 pixel neighborhood
-    - image_scaled = cv2.resize(image, None, fx=0.75, fy=0.75)
-    - img_scaled = cv2.resize(image, None, fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
-    - img_scaled = cv2.resize(image, (900, 400), interpolation = cv2.INTER_AREA) 
-    
-         ![03_Interpolation.jpg](images/03_Interpolation.jpg)    
+        
+    ```python
+        image_scaled = cv2.resize(image, None, fx=0.75, fy=0.75)
+        img_scaled = cv2.resize(image, None, fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
+        img_scaled = cv2.resize(image, (900, 400), interpolation = cv2.INTER_AREA) 
+    ```
+      ![03_Interpolation.jpg](images/03_Interpolation.jpg)    
     
 13. Image Pyramids:
-    - smaller = cv2.pyrDown(image)
-    - larger = cv2.pyrUp(smaller)
-14. Edges Detection:
-    -  Sobel
-        - sobel_x = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5)
-        - sobel_y = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5)
-        - cv2.imshow('Sobel X', sobel_x)
-        - cv2.imshow('Sobel Y', sobel_y)
-        - sobel_OR = cv2.bitwise_or(sobel_x, sobel_y)
-        - cv2.imshow('sobel_OR', sobel_OR)
-    - Laplacian:
-        - laplacian = cv2.Laplacian(image, cv2.CV_64F)
-        - cv2.imshow('Laplacian', laplacian)
+    ```python
+        smaller = cv2.pyrDown(image)
+        larger = cv2.pyrUp(smaller)
+    ```
+    
+14. Edges Detection: Edge detection is one of the fundamental operations when we perform image processing. It helps us reduce the amount of data (pixels) to process and maintains the structural aspect of the image. Sobel & Laplacian work with convolutions and achieve the same end goal.
+    -  Sobel: (**first order derivatives**): 
+        - Sobel edge detector is a gradient based method based on the first order derivatives. It calculates the first derivatives of the image separately for the X and Y axes.
+        - The operator uses two (n X n) kernels which are convolved with the original image to calculate approximations of the derivatives - one for horizontal changes, and one for vertical.
+        ```python
+            sobel_x = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5)
+            sobel_y = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5)
+            cv2.imshow('Sobel X', sobel_x)
+            cv2.imshow('Sobel Y', sobel_y)
+            sobel_OR = cv2.bitwise_or(sobel_x, sobel_y)
+            cv2.imshow('sobel_OR', sobel_OR)
+        ```
+            
+    - Laplacian: (2nd order derivative, so it is **extremely sensitive to noise**):
+        - Unlike the Sobel edge detector, the Laplacian edge detector uses only one kernel. It calculates second order derivatives in a single pass.
+        ```python
+            laplacian = cv2.Laplacian(image, cv2.CV_64F)
+            cv2.imshow('Laplacian', laplacian)
+        ```
+            
     - Canny:
-        - canny = cv2.Canny(image, 50, 120)
-        - cv2.imshow('Canny', canny)
+        ```python
+            canny = cv2.Canny(image, 50, 120)
+            cv2.imshow('Canny', canny)
+        ```
+        
+        
+        ```python [Output of this python code is shown below]
+            def test(ksize=5):
+                output_datatype = cv2.CV_64F
+                show_detection_outputs(ksize, output_datatype)
+
+                output_datatype = cv2.CV_16S
+                show_detection_outputs(ksize, output_datatype)
+
+                min_threshold_range = 50
+                max_threshold_range = 120
+                cv2.imshow('Canny', cv2.Canny(image, min_threshold_range, max_threshold_range))
+
+
+            def show_detection_outputs(ksize, output_datatype):
+                sobel_x = cv2.Sobel(image, output_datatype, 0, 1, ksize=ksize)
+                cv2.imshow('Sobel X - ' + str(output_datatype)+" - ksize=("+str(ksize)+")", sobel_x)
+                sobel_y = cv2.Sobel(image, output_datatype, 1, 0, ksize=ksize)
+                cv2.imshow('Sobel Y - ' + str(output_datatype)+" - ksize=("+str(ksize)+")", sobel_y)
+                sobel_OR = cv2.bitwise_or(sobel_x, sobel_y)
+                cv2.imshow('sobel_OR - ' + str(output_datatype)+" - ksize=("+str(ksize)+")", sobel_OR)
+                cv2.imshow('Laplacian - ' + str(output_datatype)+" - ksize=("+str(ksize)+")", cv2.Laplacian(image, output_datatype))
+
+            test(5)
+            test(11) #kernel size must be odd
+            cv2.waitKey()        
+
+        ```
+        ![03b_EdgeDetection_Example.jpg](images/03b_EdgeDetection_Example.jpg)
+        
 15. Getting Perspective:
     - Non-Affine:
         - -# Cordinates of the 4 corners of the original image
