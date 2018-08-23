@@ -38,60 +38,89 @@ Both eyes & camera use an adaptive lens to control:
                 
                 - Value - Brightness or intensity (0-255)
             - It's useful in computer vision for color segmentation. In RGB, filtering specific colors isn't easy, however, HSV makes it much easier to set color ranges to filter specific colors we perceive them.
-        ![01_HSV_concept.jpg](images/01_HSV_concept.jpg)
+                        - HSV Concept:
+                            ![01_HSV_concept.jpg](images/01_HSV_concept.jpg)
 
 
 
 
 **Playing with OpenCV**
-1. cv2.imread(<file>)
-2. cv2.imshow(<LabelOfWindow>, <NumpyArrayForImage>)
-3. cv2.imwrite(<NameOfFile>, <NumpyArrayForImage>)
-4. cv2.cvtColor(<NumpyArrayForImage>, cv2.BGR2GRAY) #Grayscaling
-5. cv2.imread(<file>, 0) #Grayscaling
+    ```python
+        cv2.imread(<file>) ## opencv doesn't support reading .gif image by it's own, we need other third party module for the same
+        cv2.imshow(<LabelOfWindow>, <NumpyArrayForImage>)
+        cv2.imwrite(<NameOfFile>, <NumpyArrayForImage>)
+        cv2.cvtColor(<NumpyArrayForImage>, cv2.BGR2GRAY) #Grayscaling
+        cv2.imread(<file>, 0) #Grayscaling
+    ```
 <BR>**NOTE** A lot of algorithms/APIs in open-cv require you to first convert the image into gray scaled image (reason being they are easy to process as they have less information but important ones - that's why black & white TV worked fine colors were just a bonus to it but are not necessary)
-6. B, G, R = image[10, 50] # BGR Values for the first 0,0 pixel
+    ```python
+        B, G, R = image[10, 50] # BGR Values for the first 0,0 pixel
+    ```
+    
 7. HSV : for color filtering
-    - hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    - cv2.imshow('Hue channel', hsv_image[:, :, 0])
-    - cv2.imshow('Saturation channel', hsv_image[:, :, 1])
-    - cv2.imshow('Value channel', hsv_image[:, :, 2])# Value Channel
+    ```python
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        cv2.imshow('Hue channel', hsv_image[:, :, 0])
+        cv2.imshow('Saturation channel', hsv_image[:, :, 1])
+        cv2.imshow('Value channel', hsv_image[:, :, 2])# Value Channel
     
-    - # Let's re-make the original image, 
-    - merged = cv2.merge([B, G,R]) 
-    - cv2.imshow("Merged", merged)
+        # Let's re-make the original image, 
+        merged = cv2.merge([B, G,R]) 
+        cv2.imshow("Merged", merged)
     
-    - # Let's amplify the blue color
-    - merged = cv2.merge([B+100, G, R])
+        # Let's amplify the blue color
+        merged = cv2.merge([B+100, G, R])
+    ```
     
 8. Create Histograms:
-    - image = cv2.imread('images/input.jpg') 
-    - plt.hist(image.ravel(), 256, [0, 256]); plt.show() # for filled histograms
-    - For hollow histogram shapes, find below:
-        - histogram2 = cv2.calcHist([image], [0], None, [256], [0, 256]) # Second parameter [0] for blue color extraction and [1] for green and [2] for red etc.  
-        - plt.plot(histogram2, color = 'b') # 'r' for red, 'g' for green
+    ```python
+        image = cv2.imread('images/input.jpg') 
+        plt.hist(image.ravel(), 256, [0, 256]); plt.show() # for filled histograms
+        
+        
+        # For hollow histogram shapes, find below:
+        histogram2 = cv2.calcHist([image], [0], None, [256], [0, 256]) # Second parameter [0] for blue color extraction and [1] for green and [2] for red etc.  
+        plt.plot(histogram2, color = 'b') # 'r' for red, 'g' for green
+    ```
         
 9. Draw Shapes:
-    - cv2.line(image, (startposition), (endposition), (colors), width)
-        - cv2.line(image, (0,0), (511,511), (255,127,0), 5)
-    - cv2.rectangle(image, (100,100), (300,250), (127,50,127), -1) # -1 means filled
-    - cv2.circle(image, (centre), Radius, (15,75,50), -1)
-        - cv2.circle(image, (350, 350), 100, (15,75,50), 10)
-    - Polynomial:
-        - pts = np.array( [[10,50], [400,50], [90,200], [50,500]], np.int32)
-        - pts = pts.reshape((-1,1,2))
-        - cv2.polylines(image, [pts], True, (0,0,255), 3)
-    - Extract Text:
-        - cv2.putText(image, 'Hello World!', (75,290), cv2.FONT_HERSHEY_COMPLEX, 2, (100,170,0), 3)
+    ```python
+        # cv2.line(image, (startposition), (endposition), (colors), width)
+        cv2.line(image, (0,0), (511,511), (255,127,0), 5)
+        
+        cv2.rectangle(image, (100,100), (300,250), (127,50,127), -1) # -1 means filled
+        
+        # cv2.circle(image, (centre), Radius, (15,75,50), -1)
+        cv2.circle(image, (350, 350), 100, (15,75,50), 10)
+        
+        # Polynomial:
+        pts = np.array( [[10,50], [400,50], [90,200], [50,500]], np.int32)
+        pts = pts.reshape((-1,1,2))
+        cv2.polylines(image, [pts], True, (0,0,255), 3)
+        
+        ## Extract Text:
+        cv2.putText(image, 'Hello World!', (75,290), cv2.FONT_HERSHEY_COMPLEX, 2, (100,170,0), 3)
+    ```
         - Different Fonts supported are:
             - FONT_HERSHEY_SIMPLEX, FONT_HERSHEY_PLAIN
             - FONT_HERSHEY_DUPLEX,FONT_HERSHEY_COMPLEX 
             - FONT_HERSHEY_TRIPLEX, FONT_HERSHEY_COMPLEX_SMALL
             - FONT_HERSHEY_SCRIPT_SIMPLEX
             - FONT_HERSHEY_SCRIPT_COMPLEX
+            
 10. Translation:
-    - T = np.float32([[1, 0, -50], [0, 1,-50]])
-    - img_translation = cv2.warpAffine(image, T, (width//2, height//2))
+    ```python
+        # Need to create translation matrix
+        matrix_shift_by = -50
+        T = np.float32([[1, 0, matrix_shift_by], [0, 1,matrix_shift_by]])
+        
+        size_divisor = 2
+        # Using the same translation matrix, use warpAffine for translation
+        img_translation = cv2.warpAffine(image, T, (width//size_divisor, height//size_divisor))
+    ```
+    if size_divisor=1 and matrix_shift_by=20,-20 then following would be the impact.
+                    ![02b_TranslationExample.jpg](images/02b_TranslationExample.jpg)
+    
 11. Rotation: to scale & rotate at the same time
     - rotation_matrix = cv2.getRotationMatrix2D((width/2, height/2), 90, .5) #.5 is the scaling factor, 90 is anti-clockwise rotation angle (now since canvas remain the same change of shape might cause other area to be cropped or black boundary)
     - rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
