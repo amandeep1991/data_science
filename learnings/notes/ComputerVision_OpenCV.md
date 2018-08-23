@@ -273,6 +273,40 @@ Both eyes & camera use an adaptive lens to control:
             
             cv2.imshow('warpAffine', warped)
         ```
+        - Tested Code (output is shown below):
+        ```python
+            image_new = image.copy()
+
+            # Cordinates of the 4 corners of the original image
+            left_top_point = [32, 30]
+            right_top_point = [170, 33]
+            # left_bottom_point = [18, 212]
+            right_bottom_point = [153, 200]
+            # initial_points = [left_top_point, right_top_point, left_bottom_point, right_bottom_point]
+            initial_points = [left_top_point, right_top_point, right_bottom_point]
+            for point in initial_points:
+                cv2.circle(image_new, tuple(point), 10, (0, 0, 255), 2)
+
+            cv2.imshow("1. Original", image_new)
+
+            points_A = np.float32(initial_points)
+            # Coordinates of the 4 corners of the desired output
+            # We use a ratio of an A4 Paper 1 : 1.41
+            # points_B = np.float32([[0, 0], [238, 0], [0, 212], [238, 212]])
+            points_B = np.float32([[0, 0], [238, 0], [0, 212]])
+            M = cv2.getAffineTransform(points_A, points_B)
+            warped = cv2.warpAffine(image, M, (238, 212))
+            cv2.imshow('2. warpAffine', warped)
+
+            M = cv2.getAffineTransform(points_B, points_A)
+            warped = cv2.warpAffine(warped, M, (238, 212))
+            cv2.imshow('3. Reverting Back', warped)
+
+            cv2.waitKey()        
+        ```
+        
+        ![03d_Affine_Example.jpg](images/03d_Affine_Example.jpg)
+        
 16. Sketch from Web-cam, live:
     ```python
         # Our sketch generating function
