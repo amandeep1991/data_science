@@ -23,22 +23,22 @@ Both eyes & camera use an adaptive lens to control:
         - Grayscale - Ranges of shades of grey
         - Binary - Pixels are either black or white 
 
-**Color Spaces**: RGB (BGR), HSV (Hue, Saturation, Value/Brightness), CMYK
-1. HSV:
-    - Attempts to represent colors the way humans perceive it.
-    - Stores color in cylindrical representation of RGB color points.
-        - Hue - Color Value (0-179)
-            - For Open-CV, otherwise we do have 359 value as well
-            ![02_HueColorSpace.jpg](images/02_HueColorSpace.jpg)
-            - Red (165-15)
-            - Green (45-75)
-            - Blue (90-120)
-            
-        - Saturation - Vibrancy of Color (0-255)
-        
-        - Value - Brightness or intensity (0-255)
-    - It's useful in computer vision for color segmentation. In RGB, filtering specific colors isn't easy, however, HSV makes it much easier to set color ranges to filter specific colors we perceive them.
-![01_HSV_concept.jpg](images/01_HSV_concept.jpg)
+    - **Color Spaces**: RGB (BGR), HSV (Hue, Saturation, Value/Brightness), CMYK
+        1. HSV:
+            - Attempts to represent colors the way humans perceive it.
+            - Stores color in cylindrical representation of RGB color points.
+                - Hue - Color Value (0-179)
+                    - For Open-CV, otherwise we do have 359 value as well
+                    ![02_HueColorSpace.jpg](images/02_HueColorSpace.jpg)
+                    - Red (165-15)
+                    - Green (45-75)
+                    - Blue (90-120)
+                
+                - Saturation - Vibrancy of Color (0-255)
+                
+                - Value - Brightness or intensity (0-255)
+            - It's useful in computer vision for color segmentation. In RGB, filtering specific colors isn't easy, however, HSV makes it much easier to set color ranges to filter specific colors we perceive them.
+        ![01_HSV_concept.jpg](images/01_HSV_concept.jpg)
 
 
 
