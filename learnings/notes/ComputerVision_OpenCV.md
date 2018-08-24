@@ -438,11 +438,20 @@ Both eyes & camera use an adaptive lens to control:
         
             - It approximates a contour shape to another shape with less number of vertices depending upon the precision we specify. It is an implementation of Douglas-Peucker algorithm.
             - Below, in second image, green line shows the approximated curve for epsilon = 10% of arc length. Third image shows the same for epsilon = 1% of the arc length. Third argument specifies whether curve is closed or not.
+                - visuals:
+                    
                     ![03e_approxPolyDP_Example.jpg](images/03e_approxPolyDP_Example.jpg)
                     
                 - **contour** – is the individual contour we wish to approximate.
                 - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter.
                 - **Closed** – a Boolean value that states whether the approximate contour should be open or closed.
+                
+             
+            - Applications:match = cv2.matchShapes(template_contour, c, 1, 0.0)
+                - Visual Pattern Matching - Detecting Car Liciense plate.
+                - Collision avoidance: If the convex hull of a car avoids collision with obstacles then so does the car.
+                - Smallest box: The smallest area rectangle that encloses a polygon
+            
         ```python
               _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
               # Iterate through each contour and compute the approx contour
@@ -474,13 +483,14 @@ Both eyes & camera use an adaptive lens to control:
             - clockwise : Orientation flag. If it is True, the output convex hull is oriented clockwise. Otherwise, it is oriented counter-clockwise.
             - returnPoints : By default, True. Then it returns the coordinates of the hull points. If False, it returns the indices of contour points corresponding to the hull points.
 
-18. Shape Matching: (Shape can be identified by number of minimum points to remember contour or approxPolyDP)
+18. Shape Matching: (**Shape can be identified by number of minimum points to remember contour or approxPolyDP**)
     - **cv2.matchShapes(contour template, contour, method, method parameter)**
     - **Output** – match value (lower values means a closer match)
         - **Contour Template** – This is our reference contour that we’re trying to find in the new image
         - **Contour** – The individual contour we are checking against
         - **Method** – Type of contour matching (1, 2, 3) [More Details here](http://docs.opencv.org/2.4/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html)
         - **Method** Parameter – leave alone as 0.0 (not fully utilized in python OpenCV)
+        
     ```python
             # Find contours in template
             _, contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -509,7 +519,12 @@ Both eyes & camera use an adaptive lens to control:
             cv2.drawContours(target, [closest_contour], -1, (0,255,0), 3)
             cv2.imshow('Output', target)
     ```
-19. Line Detection:
+    - Output:
+            ![29_matchShape.jpg](images/29_matchShape.jpg)
+    
+    
+19. Line Detection: While edges (i.e. boundaries between regions with relatively distinct graylevels) are by far the most common type of discontinuity in an image, instances of thin lines in an image occur frequently enough that it is useful to have a separate mechanism for detecting them.
+ 
     - **cv2.HoughLines**(binarized/thresholded image, 𝜌 accuracy, 𝜃 accuracy, threshold)
         - Threshold here is the minimum vote for it to be considered a line
         ```python
@@ -581,15 +596,15 @@ Both eyes & camera use an adaptive lens to control:
     - Canny Algorithm:
         - Applies Gaussian blurring
         -  Finds intensity gradient of the image
-        - Applied non-maximum suppression (i.e removes pixels that are not edges)
+        - **Applied non-maximum suppression (i.e removes pixels that are not edges)**
         - Hysteresis - Applies thresholds (i.e if pixel is within the upper and lower thresholds, it is considered an edge)
 3. **Image Segmentation**
     - Partitioning images into different regions.
     - Different Techniques:
-        - Contours: Are continuous lines or curves that bound or cover the full boundary of an object in an image.
+        - **Contours**: Are continuous lines or curves that bound or cover the full boundary of an object in an image.
             - Very important in : Object Detection, Shape Analysis
-            - Open-CV's findContours require gray-scale image otherwise it will throw an error.
-                - findContours doesn't require image to be passed to Canny Algorithm but if passed it will remove a lot of noise and hence let to easy processing (can help to reduce the number of unnecessary contours).
+            - Open-CV's findContours **require gray-scale** image otherwise it will throw an error.
+                - findContours doesn't require image to be passed to **Canny Algorithm but if passed** it will remove a lot of noise and hence let to easy processing (can help to reduce the number of unnecessary contours).
                 - open-cv stores contours as a list of list. List contour1 stores all the points of one contour as a list for example.
             - **Sorting Contours**:
                 - **Sorting by Area** can assist in Object Recognition (using contours area).
@@ -600,8 +615,7 @@ Both eyes & camera use an adaptive lens to control:
                     - Process images in specific order.
                 - It is usually a good technique to find contours and draw it on a blank white or black backgroud.
         - Line Detection
-            
-                ![05_LineDetection.jpg](05_LineDetection.jpg)
+             ![05_LineDetection.jpg](images/05_LineDetection.jpg)
             - open-cv stores line as per above equation where 
                 - p is the perpendicular distance from origin
                 - theta is the angle formed by the normal of this line to the origin
@@ -619,6 +633,7 @@ Both eyes & camera use an adaptive lens to control:
                 - Input image into Detector
                 - Obtain key points
                 - Draw key points
+                
             ```python
                     # Read image
                     image = cv2.imread("images/Sunflowers.jpg")
@@ -650,8 +665,8 @@ Both eyes & camera use an adaptive lens to control:
                     - **cv2.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG**
                     - **cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS**
                     
-            - Detect ellipses:
-            ```python
+            - **Detect ellipses**:
+                    ```python
                       # Intialize the detector using the default parameters
                       detector = cv2.SimpleBlobDetector_create()
                          
@@ -669,9 +684,10 @@ Both eyes & camera use an adaptive lens to control:
                       # Display image with blob keypoints
                       cv2.imshow("Blobs using default parameters", blobs)
                       cv2.waitKey(0)
-            ```
-            - Detect ellipses and circles separately:
-            ```python
+                    ```
+            
+            - **Detect ellipses and circles separately**:
+                    ```python
                         # Set our filtering parameters
                         # Initialize parameter settiing using cv2.SimpleBlobDetector
                         params = cv2.SimpleBlobDetector_Params()
@@ -705,7 +721,8 @@ Both eyes & camera use an adaptive lens to control:
                         number_of_blobs = len(keypoints)
                         text = "Number of Circular Blobs: " + str(len(keypoints))
                         cv2.putText(blobs, text, (20, 550), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 100, 255), 2)
-            ```
+                    ```
+                    
             - Blob filtering shape & size: **cv2.SimpleBlobDetector_Params()**
                 - Area: (to see all blobs having area in given range)
                     - params.filterByArea=True/False
