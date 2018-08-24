@@ -261,7 +261,7 @@ Both eyes & camera use an adaptive lens to control:
         ```
         ![03c_NoneAffine_Example.jpg](images/03c_NoneAffine_Example.jpg)
         
-    - Affine:
+    - Affine: {**If the points are not as such that affine transformation is not possible, then it will throw error: OpenCV Error: Assertion failed**} <**Important note: getAffine transform needs and expects ONLY 3 points, and the result matrix is 2-by-3, instead of 3-by-3.**>
         ```python
             points_A = np.float32([[320,15], [700,215], [85,610]])
             
@@ -307,6 +307,23 @@ Both eyes & camera use an adaptive lens to control:
         
         ![03d_Affine_Example.jpg](images/03d_Affine_Example.jpg)
         
+        
+        ```python
+            left_top_point = [32, 30]
+            right_top_point = [170, 33]
+            left_bottom_point = [18, 212]
+            right_bottom_point = [153, 200]
+            initial_points = [left_top_point, right_top_point, left_bottom_point]
+            points_A = np.float32(initial_points)
+            
+            left_top_point = [72, 90]
+            right_top_point = [210, 33]
+            left_bottom_point = [58, 212]
+            right_bottom_point = [193, 200]
+            points_B = np.float32([left_top_point, right_top_point, left_bottom_point])
+        ```
+        ![03da_Affine_Example.jpg](images/03da_Affine_Example.jpg)
+        
 16. Sketch from Web-cam, live:
     ```python
         # Our sketch generating function
@@ -335,6 +352,7 @@ Both eyes & camera use an adaptive lens to control:
     ```
     
 17. Contours: [More about contours - area, centroid, fitting circle or line etc](https://docs.opencv.org/3.4.2/dd/d49/tutorial_py_contour_features.html)
+
     -  Find & draw contours:
         ```python
             gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)`    
@@ -343,23 +361,23 @@ Both eyes & camera use an adaptive lens to control:
             # Use a copy of your image e.g. edged.copy(), since findContours alters the image`    
             image, contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)`
         ```
-            
-            - 'hierarchy' describes the child-parent relationships between contours (i.e. contours within contours)
-            - Approximation Methods (3rd Parameter):
-                - **cv2.CHAIN_APPROX_NONE**: 
-                    - stores all the boundary points. 
-                    - But we don't necessarily need all bounding points. 
-                    - If the points form a straight line, we only need the start and ending points of that line.
-                - **cv2.CHAIN_APPROX_SIMPLE**: 
-                    - instead only provides these start and end points of bounding contours.
-                    - Thus resulting in much more efficent storage of contour information.
+      - '**hierarchy**' describes the child-parent relationships between contours (i.e. contours within contours)
+      - Approximation Methods (3rd Parameter):
+        - **cv2.CHAIN_APPROX_NONE**: 
+            - stores all the boundary points. 
+            - But we don't necessarily need all bounding points. 
+            - If the points form a straight line, we only need the start and ending points of that line.
+        - **cv2.CHAIN_APPROX_SIMPLE**: 
+            - instead only provides these start and end points of bounding contours.
+            - Thus resulting in much more efficent storage of contour information.
                     
-            - Retrieval Modes (Hierarchy Types): https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.html#contours-hierarchy
-                - cv2.RETR_LIST: Retrieves all contours
-                - cv2.RETR_EXTERNAL: Retrieves external or outer contours only
-                - cv2.RETR_CCOMP: Retrieves all in a 2-level hierarchy
-                - cv2.RETR_TREE: Retrieves all in full hierarchy
-                - cv2.RETR_FLOODFILL: 
+      - Retrieval Modes (Hierarchy Types): https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.html#contours-hierarchy
+                - **cv2.RETR_LIST**: Retrieves all contours
+                - **cv2.RETR_EXTERNAL**: Retrieves external or outer contours only
+                - **cv2.RETR_CCOMP**: Retrieves all in a 2-level hierarchy
+                - **cv2.RETR_TREE**: Retrieves all in full hierarchy
+                - **cv2.RETR_FLOODFILL**: 
+                
         ```python    
             # Use '-1' as the 3rd parameter to draw all
             cv2.drawContours(image, contours, -1, (0,255,0), 3)
@@ -367,8 +385,10 @@ Both eyes & camera use an adaptive lens to control:
     
     - **Sorting Contours**:
         - By Area:
+            - '**reverse=True**' means ascending order
+            - '**key=cv2.contourArea**' means it will be used for comparision to order different elements or contours
           ```python
-              area = cv2.contourArea(contour_from_contour_list_we_get_from_findContours_method)
+              area = cv2.contourArea(contour_from_contour_list_we_get_from_findContours_method) # just an API to calculate contour Area
               
               #Sort contours large to small, above line is just to get area, but not required for below sorting
               sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
@@ -395,6 +415,7 @@ Both eyes & camera use an adaptive lens to control:
             
             # Labeling Contours left to right
             for (i,c)  in enumerate(contours_left_to_right):
+            
                 cv2.drawContours(orginal_image, [c], -1, (0,0,255), 3)  
                 M = cv2.moments(c)
                 cx = int(M['m10'] / M['m00'])
@@ -402,6 +423,7 @@ Both eyes & camera use an adaptive lens to control:
                 cv2.putText(orginal_image, str(i+1), (cx, cy), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.imshow('6 - Left to Right Contour', orginal_image)
                 cv2.waitKey(0)
+                
                 (x, y, w, h) = cv2.boundingRect(c)
                 # Let's now crop each contour and save these images
                 cropped_contour = orginal_image[y:y + h, x:x + w]
@@ -410,11 +432,12 @@ Both eyes & camera use an adaptive lens to control:
                 # cv2.imwrite(image_name, cropped_contour)
                 cv2.imshow(image_name, cropped_contour)
           ```
+          
     - Approximate Contours + Convex Hull:-
         - **cv2.approxPolyDP(contour, Approximation Accuracy, Closed)**
-            - **contour** – is the individual contour we wish to approximate
-            - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter
-            - **Closed** – a Boolean value that states whether the approximate contour should be open or closed
+            - **contour** – is the individual contour we wish to approximate.
+            - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter.
+            - **Closed** – a Boolean value that states whether the approximate contour should be open or closed.
         ```python
               _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
               # Iterate through each contour and compute the approx contour
