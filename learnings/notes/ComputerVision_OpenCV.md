@@ -372,11 +372,11 @@ Both eyes & camera use an adaptive lens to control:
             - Thus resulting in much more efficent storage of contour information.
                     
       - Retrieval Modes (Hierarchy Types): https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contours_hierarchy/py_contours_hierarchy.html#contours-hierarchy
-                - **cv2.RETR_LIST**: Retrieves all contours
-                - **cv2.RETR_EXTERNAL**: Retrieves external or outer contours only
-                - **cv2.RETR_CCOMP**: Retrieves all in a 2-level hierarchy
-                - **cv2.RETR_TREE**: Retrieves all in full hierarchy
-                - **cv2.RETR_FLOODFILL**: 
+        - **cv2.RETR_LIST**: Retrieves all contours
+        - **cv2.RETR_EXTERNAL**: Retrieves external or outer contours only
+        - **cv2.RETR_CCOMP**: Retrieves all in a 2-level hierarchy
+        - **cv2.RETR_TREE**: Retrieves all in full hierarchy
+        - **cv2.RETR_FLOODFILL**: 
                 
         ```python    
             # Use '-1' as the 3rd parameter to draw all
@@ -434,10 +434,15 @@ Both eyes & camera use an adaptive lens to control:
           ```
           
     - Approximate Contours + Convex Hull:-
-        - **cv2.approxPolyDP(contour, Approximation Accuracy, Closed)**
-            - **contour** – is the individual contour we wish to approximate.
-            - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter.
-            - **Closed** – a Boolean value that states whether the approximate contour should be open or closed.
+        - **cv2.approxPolyDP(contour, Approximation Accuracy, Closed)** [Link1](https://www.programcreek.com/python/example/89328/cv2.approxPolyDP), [Link2](https://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html)
+        
+            - It approximates a contour shape to another shape with less number of vertices depending upon the precision we specify. It is an implementation of Douglas-Peucker algorithm.
+            - Below, in second image, green line shows the approximated curve for epsilon = 10% of arc length. Third image shows the same for epsilon = 1% of the arc length. Third argument specifies whether curve is closed or not.
+                    ![03e_approxPolyDP_Example.jpg](images/03e_approxPolyDP_Example.jpg)
+                    
+                - **contour** – is the individual contour we wish to approximate.
+                - **Approximation Accuracy** – Important parameter is determining the accuracy of the approximation. Small values give precise-  approximations, large values give more generic approximation. A good rule of thumb is less than 5% of the contour perimeter.
+                - **Closed** – a Boolean value that states whether the approximate contour should be open or closed.
         ```python
               _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
               # Iterate through each contour and compute the approx contour
@@ -448,18 +453,27 @@ Both eyes & camera use an adaptive lens to control:
                   cv2.drawContours(image, [approx], 0, (0, 255, 0), 2)
                   cv2.imshow('Approx Poly DP', image)
         ```
+        
         - **Convex Hull**:
         ```python
               _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+              
               # Sort Contours by area and then remove the largest frame contour
               n = len(contours) - 1
               contours = sorted(contours, key=cv2.contourArea, reverse=False)[:n]
+              
               # Iterate through contours and draw the convex hull
               for c in contours:
                   hull = cv2.convexHull(c)
                   cv2.drawContours(image, [hull], 0, (0, 255, 0), 2)
                   cv2.imshow('Convex Hull', image)
         ``` 
+         - Arguments details:
+            - points are the contours we pass into.
+            - hull is the output, normally we avoid it.
+            - clockwise : Orientation flag. If it is True, the output convex hull is oriented clockwise. Otherwise, it is oriented counter-clockwise.
+            - returnPoints : By default, True. Then it returns the coordinates of the hull points. If False, it returns the indices of contour points corresponding to the hull points.
+
 18. Shape Matching: (Shape can be identified by number of minimum points to remember contour or approxPolyDP)
     - **cv2.matchShapes(contour template, contour, method, method parameter)**
     - **Output** – match value (lower values means a closer match)
