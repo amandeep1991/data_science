@@ -10,9 +10,53 @@ import math
 
 print(my_first_variable)
 
-def my_hello():
+def my_hello2():
+    # India is great
+    print('India is great')
+
+
+
+def my_hello3():
     '''
     It prints 'India is great'
     :return: None
     '''
     print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+    print('India is great')
+
+
+
+def my_hello4():
+    '''
+    It prints 'India is great'
+    :return: None
+    '''
+    print('India is great')
+
+
+
+def my_hello5():
+    '''
+    It prints 'India is great'
+    :return: None
+    '''
+    print('India is great')
+
+

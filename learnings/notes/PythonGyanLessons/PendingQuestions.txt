@@ -1,0 +1,11 @@
+pydoc module - installation
+
+method vs function ??
+
+how we came to know about the dependencies of the project (for deployment purposes)
+
+os vs sys
+    Frequently used methods in both
+
+
+Linux directory structure is case-sensitive or not
