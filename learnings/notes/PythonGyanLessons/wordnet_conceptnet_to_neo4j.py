@@ -114,7 +114,7 @@ class Exporter:
     def extract_conceptnet(self):
         log.info('Extracting ConceptNet')
         last_progress = 0
-        with gzip.open(self.concept_location, 'rt') as f:
+        with gzip.open(self.concept_location, 'rt', encoding="utf8") as f:
             lines = csv.reader(f, delimiter='\t')
             i = 0
             for line in lines:
@@ -271,25 +271,25 @@ class Exporter:
 
     def write_results(self):
         log.info("Writing synsets")
-        with open('%s/synsets.csv' % self.dataset_folder, 'w') as f:
+        with open('%s/synsets.csv' % self.dataset_folder, 'w', encoding="utf8") as f:
             writer = csv.writer(f)
             writer.writerow(['id:ID', 'pos:string', 'definition:string', ':LABEL'])
             for synset in self.synsets:
                 writer.writerow([synset.get_id, synset.get_pos, synset.get_definition, synset.get_label])
 
         log.info('Writing Relationships')
-        with open('%s/relationships.csv' % self.dataset_folder, 'w') as f:
+        with open('%s/relationships.csv' % self.dataset_folder, 'w', encoding="utf8") as f:
             writer = csv.writer(f)
             writer.writerow([':START_ID', ':END_ID', 'dataset:string', 'weight:double', ':TYPE'])
             for relationship in self.relationships:
                 writer.writerow(relationship)
 
         log.info('Writing Words')
-        with open('%s/words.csv' % self.dataset_folder, 'w') as f:
+        with open('%s/words.csv' % self.dataset_folder, 'w', encoding="utf8") as f:
             writer = csv.writer(f)
             writer.writerow(WordNode.get_header())
             for id in self.lemma_map:
                 writer.writerow(self.lemma_map[id].get_row())
 
 
-Exporter('neo4j_csv_imports', 'conceptnet-assertions-5.5.0.csv.gz', language_filter='en').export()
+Exporter('neo4j_csv_imports', 'conceptnet-assertions-5.6.0.csv.gz', language_filter='en').export()
