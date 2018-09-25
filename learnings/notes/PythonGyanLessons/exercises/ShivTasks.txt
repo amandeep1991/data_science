@@ -1,0 +1,46 @@
+# Shiv Tasks: 20180916
+
+# Task #1: Solution must be generalized, so that if I change input the output will change automatically.
+#input_1
+"Aman is not a good boy.Shiv is very good boy. But Shiv doesn't study hard. Ideally he should study as well, being good is not enough. God, please give him some motivation to study"
+
+#input_2
+"Aman is not a good boy.Shiv is very good boy.But Shiv doesn't study hard.Ideally he should study as well, being good is not enough.God, please give him some motivation to study."
+
+#expected_output
+['Aman is not a good boy.',
+ 'Shiv is very good boy.',
+ "But Shiv doesn't study hard.",
+ 'Ideally he should study as well, being good is not enough.',
+ 'God, please give him some motivation to study.']
+
+
+# Task #2: Table with command line argument
+#Command to Run:
+python table.py 2
+
+# output on console
+2 * 1 = 2
+2 * 2 = 4
+2 * 3 = 6
+2 * 4 = 8
+2 * 5 = 10
+2 * 6 = 12
+2 * 7 = 14
+2 * 8 = 16
+2 * 9 = 18
+2 * 10 = 20
+
+# Task #3: Create a calculator supporting +,-,/,* and ** operators from command line (Command Line Arguments).
+
+# Command
+python calculator.py 2 + 3
+# output on console
+2+3=5
+
+# Command
+python calculator.py 2 ** 3
+# output on console
+2**3=8
+
+

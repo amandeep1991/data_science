@@ -4,13 +4,21 @@ mathematical functions defined by the C standard.
 """
 
 
-my_first_variable = "Hello World"
+class MyHello:
 
-print(my_first_variable)
+    def hh(self):
+        pass
+
+
+
 
 def my_hello2():
     # India is great
     print('India is great')
+
+my_hello2()
+
+a,b
 
 def mmm(a,b,c):
     '''
@@ -20,6 +28,7 @@ def mmm(a,b,c):
     :param c:
     :return:
     '''
+    pass
 
 def calculate(num1, num2, operator):
     '''
@@ -70,7 +79,7 @@ def my_hello4():
     '''
     print('India is great')
 
-open()
+# open()
 
 
 def my_hello5():
