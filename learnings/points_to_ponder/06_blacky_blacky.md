@@ -82,5 +82,23 @@
 
 >>> 4. Cost complexity pruning (Starting at the leaves, each node is replaced with its most popular class. If the prediction accuracy is not affected then the change is kept. While somewhat naive, reduced error pruning has the advantage of simplicity and speed)
 
-
 ######10. Single dimension array: calculate sliding window average
+
+######11. Features that have been used (eligiblity criteria, ratings) 
+######12. I have an equation with 3 variables and these 3 features are highly correlated, where do you think it will create problem if I just need to predict the value of dependent value. (if I am just interested in final value of prediction)
+######13. If you are created different models for different security, so let's pick one security why I need all independent variables independant for the final value.
+######14. What is collinearity?
+######15. Let's talk about scatter plot - correction vs spearsman vs kandal ( y =x is correlated means correlation = 1, but what if y = x*2 what is the correlation)
+######16. What does expectation mean?
+######17. Relationship between expectation and pearson coorelation coefficient?
+######18. Can correlation coefficients work non-linear kind of relation? Why it is not good?
+######19. You worked in linear reqression. What is main linear regression hypothesis? Is there any assumption or hypothesis which we need to satisfy before applying it. -> Multicollinear (is it only for linear regression or for others as well). What things I need to test before applying linear regression.
+######20. What is the difference between R-square and Adjusted R-square.
+######21. From explaination: Why increase to R-square will lead to over-fitting
+######22. You have 5 variables and r-square of model is very less. Non of them is having linear relation. YOu don't have any other data. What would be the next step.
+    I would exclude a particular feature and then find r-square - issue
+    Main reason why model didn't performed well, you can only used linear regression model. Is there anything you can do here --> polynomial regression
+######23. How do you figure out what polynomial I should use. Start with 2 degress but then you tried 3 and it got improved. But where to stop to avoid over-fitting. - techniques - ridge regression/lasso?
+######24. Linear regression vs ridge regression
+######25. What is regularization? types-ridge regression?
+######26. Liquidity funds model creation? redemption/txn cost. start with data management/data pipeline-etl/data-processing - a lot of noisy data/later on creating models/how much money should we have in reserved/ python or scala(mostly) - sparks.
