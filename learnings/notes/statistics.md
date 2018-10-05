@@ -23,6 +23,10 @@
 >>>*  P(A∩B∩C)=P(A)*P(B/A)*P(C/A∩B)   for 3 events 
 >>11. When ratio is given (3:4:5) then probability would be 3/12, 4/12, 5/12  
 >>12. When ratio is given (3:4:5) then probability would be 3/12, 4/12, 5/12  
+>>13. Total Probability Rule:
+>>>* P(B) = P(B∩A)+P(B∩A') = P(B|A)*P(A) + P(B|A')*P(A') 
+>>14. Variance for random variable:
+>>>* Var(X) = sigma-square = E(X-ǖ) ** 2 = E(X**2) - [E(x)]**2
 
 		
 		
