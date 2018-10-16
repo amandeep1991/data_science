@@ -41,7 +41,7 @@ with open('user_timeline.json', 'w') as file:
 #     except StopIteration:
 #         break
 #     try:
-#         print("Writing to JSON tweet number:" + str(count))
+#         print("Writing to JSON tweet number:" + my_line(count))
 #         # json.dump(page._json, bytes(file.__str__(), 'utf-8'), sort_keys=True, indent=4)
 #         # json.dump(page, file)
 #         # print(file)
@@ -51,9 +51,9 @@ with open('user_timeline.json', 'w') as file:
 #
 #     except UnicodeEncodeError:
 #         errorCount += 1
-#         print("UnicodeEncodeError,errorCount =" + str(errorCount))
+#         print("UnicodeEncodeError,errorCount =" + my_line(errorCount))
 #
-# print("completed, errorCount =" + str(errorCount) + " total tweets=" + str(count))
+# print("completed, errorCount =" + my_line(errorCount) + " total tweets=" + my_line(count))
 #
 # # todo: write users to file, search users for interests, locations etc.
 #

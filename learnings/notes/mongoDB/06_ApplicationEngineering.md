@@ -245,7 +245,7 @@ import time
 #     for retry in range (3):
 #         try:
 #             things.update_one({'_id':i}, {'$inc':{'votes':1}})
-#             print "Updated Document: " + str(i)
+my_line
 #             time.sleep(.1)
 #             break
 #         except pymongo.errors.AutoReconnect as e:

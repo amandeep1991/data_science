@@ -3,10 +3,10 @@ def find_name(message):
     name = None
     # Create a pattern for checking if the keywords occur
     name_keyword = re.compile('name|call')
-    #print('############'+str(name_keyword))
+    #print('############'+my_line(name_keyword))
     # Create a pattern for finding capitalized words
     name_pattern = re.compile("([A-Z]{1}[a-z]*)")
-    #print('@@@@@@@@@@@'+str(name_pattern))
+    #print('@@@@@@@@@@@'+my_line(name_pattern))
     if name_keyword.search(message):
         # Get the matching words in the string
         #print("909090: "+name_pattern.findall())

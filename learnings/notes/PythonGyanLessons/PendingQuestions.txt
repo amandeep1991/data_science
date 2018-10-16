@@ -60,5 +60,9 @@ method vs function
 Linux directory structure is case-sensitive or not
     It's case sensitive
 
+pandas dataframe to multi-dimensional list
 
+why epoch is what is epoch??
+
+time.process_time()
 

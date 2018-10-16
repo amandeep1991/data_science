@@ -10,15 +10,21 @@ class MyHello:
         pass
 
 
-
-
 def my_hello2():
     # India is great
     print('India is great')
 
-my_hello2()
 
-a,b
+def dfdkfjdkfjdf(a,b,c):
+    '''
+    adfjkdfjdkfjd
+    :param a: djkfdjfkdjfdk
+    :param b: djfkdjfd
+    :param c:
+    :return:
+    '''
+    pass
+
 
 def mmm(a,b,c):
     '''
@@ -90,10 +96,11 @@ def my_hello5():
     print('India is great')
 
 
-print(5 + 5)
-print(5 - 5)
-company_name = "Royal Bank of Scotland"
-employee_name = "Amandeep"
-employee_skills = ['Data Science', 'Python', 'Java']
-print(company_name)
-print(employee_skills)
+# print(5 + 5)
+# print(5 - 5)
+# company_name = "Royal Bank of Scotland"
+# employee_name = "Amandeep"
+# employee_skills = ['Data Science', 'Python', 'Java']
+# print(company_name)
+# print(employee_skills)
+# my_hello2()
