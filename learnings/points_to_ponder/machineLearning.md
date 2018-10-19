@@ -82,6 +82,40 @@ So to recapitulate  it is the next evolution step for a lot of things
 >>* **Understanding skew: change the normal distribution to be centered around 10 instead of 0, and see what effect that has on the moments. The skew is still near zero; skew is associated with the shape of the distribution, not its actual offset in X. (only mean changes as per the position other nth moment will remain the same)**
  
 
+# Covariance and Correlation 
+>* **THE STRENGTH OF THE LINEAR RELATIONSHIP**
+>* **Covariance**: Means how two variables vary in tandem from their names.
+![011.MachineLearning_Covariance.jpg](img/011.MachineLearning_Covariance.jpg)
+>* **Measuring covariance**: 
+>>1. Convert this two different features vectors to vectors of variance from the mean
+>>2. Take a dot product (cosine of the angle b/w them) of two vectors
+>>3. Divide by the sample size.
+>* **Correlation**: Covariance can take any value that's where correlation comes in which is normalized value of covariance
+>>* Just divide the covariance by the std of both variables and that normalizes things.
+>>>* Correlation could vary from -1 to 1.
+>>>>1. '-1' means perfect inverse correlation
+>>>>2. '1' means no correlation
+>>>>3. '0' means perfect correlation
+>>* The correlation coefficient, r, tells us about the strength and direction of the linear relationship between x and y. 
+>>* We introduced Pearson correlation as a measure of the STRENGTH of a relationship between two variables
+>>* But any relationship should be assessed for its SIGNIFICANCE as well as its strength.
+>>* The strength of the relationship:
+>>>* is indicated by the correlation coefficient: r
+>>>* but is actually measured by the coefficient of determination: r-square
+>>>>* Why r-square and not r (coefficient of correlation)??
+>>>>* r vs correlation??
+
+# Condition Probability:
+>* Many has bought x item before y item (Amazon Recommendation)
+
+# Bayes Theorem:
+>* Comes to rescue: [**MEDICAL PROFESSION**]
+>>* Let's say we have a drug test that can accurately identify users of a drug 99% of the time and accurately has a negative result for 99% of non-users. But only 0.3% of the overall population actually uses this drug.
+>>>* Event A= Is a user of the drug, Event B=tested positively for the drug.
+>>>* Even though P(B|A) is high (99%), it doesn't mean P(A|B) is high. 
+
+
+
 
 
 

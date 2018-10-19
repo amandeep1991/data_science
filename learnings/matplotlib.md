@@ -115,7 +115,7 @@ plt.show()
 
 # Change Line Types and Colors
 plt.plot(x, norm.pdf(x), 'b-') # 'b-' -> blue line
-plt.plot(x, norm.pdf(x, 1.0, 0.5), 'r:') # 'r:' -> red dots
+plt.plot(x, norm.pdf(x, 1.0, 0.5), 'r:') # 'r:' -> red dots ('r-.' -> dot and dashed line)
 plt.show()
 
 
