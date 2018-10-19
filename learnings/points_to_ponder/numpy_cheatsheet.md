@@ -200,3 +200,14 @@ np.corrcoef(pageSpeeds, purchaseAmount) # for all possible correlation
 # np.cov for covariance 
 
 ```
+
+
+# '...' class
+>* a[..., 0] ->  the first elements in the last dimension of a multidimensional array
+>* ... is actually also a valid Python expression which represents the singleton Ellipsis object. This object has no methods and was originally intended only for use in advanced slicing notation in the numpy package
+>>* default secondary prompt in the Python interpreter, generated when you type multi-line constructs.
+>* as a placeholder for not-yet-written code (e.g. if error: ...). Code that is intentionally empty is better represented with pass.
+>* as a default argument value (e.g. def fn(x=...)), especially when you want to distinguish between not passing in a value and passing in None.
+>* when specifying type hints using the typing module (e.g. Callable[..., str] signifies a function that returns a string without specifying the call signature).
+>* when specifying type hints using the typing module (e.g. Callable[..., str] signifies a function that returns a string without specifying the call signature).
+>* Since '...' is a singleton, you should check for it with is rather than ==.
