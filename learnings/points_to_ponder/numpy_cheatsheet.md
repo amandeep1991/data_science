@@ -31,9 +31,123 @@ np.ravel(first_array)
 ```python
 import numpy as np
 np.random.randn(9)
+
+my_mean = 9
+my_std = 10
+no_of_elements = 10
+np.random.normal(my_mean, my_std, no_of_elements) # Normal Distribution
 ```
 
 
 # Difference between np.random.seed() and np.random.RandomState()
 >* If you want to set the seed that calls to np.random... will use, use np.random.seed.
 >* If you want to use the class, you must save an instance of the class, initiated with a seed.
+
+# Mean, Median, Mode
+```python
+import numpy as np
+
+incomes = np.random.normal(27000, 15000, 10000)
+np.mean(incomes)
+
+
+#%matplotlib inline
+import matplotlib.pyplot as plt
+plt.hist(incomes, 50)
+plt.show()
+
+
+np.median(incomes) #same as mean (as normal distribution was created)
+
+
+ages = np.random.randint(18, high=90, size=500)
+from scipy import stats
+stats.mode(ages)
+
+
+incomes.std()
+
+incomes.var()
+
+```
+
+
+# Distribution
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+values = np.random.uniform(-10.0, 10.0, 100000) # nearly uniform distribution
+plt.hist(values, 50)
+plt.show()
+
+
+
+
+from scipy.stats import norm        #Normal distribution function
+import matplotlib.pyplot as plt
+x = np.arange(-3, 3, 0.001)
+plt.plot(x, norm.pdf(x)) 
+
+mu = 5.0
+sigma = 2.0
+values = np.random.normal(mu, sigma, 10000)
+plt.hist(values, 50)
+plt.show()
+
+
+
+from scipy.stats import expon      # Exponential PDF / "Power Law"
+import matplotlib.pyplot as plt
+
+x = np.arange(0, 10, 0.001)
+plt.plot(x, expon.pdf(x))
+```
+![005.MachineLearning_ExponentialProbabilityMassFunction.jpg](img/005.MachineLearning_ExponentialProbabilityMassFunction.jpg)
+
+```python
+
+from scipy.stats import binom     # Binomial Probability Mass Function
+import matplotlib.pyplot as plt
+import numpy as np
+
+n, p = 10, 0.5
+x = np.arange(0, 10, 0.001)
+plt.plot(x, binom.pmf(x, n, p))
+```
+![006.MachineLearning_BinomialProbabilityMassFunction.jpg](img/006.MachineLearning_BinomialProbabilityMassFunction.jpg)
+
+ 
+ ```python
+from scipy.stats import poisson
+import matplotlib.pyplot as plt
+import numpy as np
+
+mu = 500
+x = np.arange(400, 600, 0.5)
+plt.plot(x, poisson.pmf(x, mu))
+```
+
+# Percentile
+```python
+import numpy as np
+vals = np.random.normal(0, 0.5, 10000)
+np.percentile(vals, 50)
+```
+
+# Moments:
+```python
+import numpy as np
+vals = np.random.normal(0, 0.5, 10000)
+np.mean(vals)
+
+np.var(vals)
+
+
+import scipy.stats as sp
+sp.skew(vals)
+
+
+sp.kurtosis(vals)
+
+```

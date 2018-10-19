@@ -1,5 +1,10 @@
 ## On calling fit 2nd time on linear regression model object, it forgets about old data.
 
+>* Linear Regression is good not only for prediction, once you have a fitted Linear Regression model you can learn things about relationships between the depended and the independent variables, or in more “ML” language, you can learn the relations between your features and you target value. 
+>>* Consider a simple example where we have data about house pricing, we have a bunch of features and the actual price.  
+>>* We fit a Linear Regression model and get good results. We can look at the actual weights the model learned for each feature, and if those are significant, we can say that some feature is more important than others, moreover, we can say that the house size, for example, responsible for 50% of the change in the house price and increase in 1 square meter will lead to increase in 10K in house price.  
+>* Linear Regression is a powerful tool to learn relationships from data and statisticians use it quite often.
+
 ## Adapt non linear relationship
 >1. transform the data according to basis functions.
 >>a. Polynomial basis functions (Basis Function Regression)
