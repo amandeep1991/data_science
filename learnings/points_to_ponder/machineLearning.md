@@ -116,6 +116,19 @@ So to recapitulate  it is the next evolution step for a lot of things
 
 
 
+# Difference between multi-class classification and multi-label classification (Source: https://en.m.wikipedia.org/wiki/Multi-label_classification)
+>* Multi-Class is assigning a single class to a particular combination of independent features.
+>* Multi-Lable is assigning more than 1 class to the same combination of independent features.
+>>* Although this method of dividing the task into multiple binary tasks may resemble superficially the one-vs.-all (OvA) and one-vs.-rest (OvR) methods for multiclass classification, it is essentially different from both, because a single classifier under binary relevance deals with a single label, without any regard to other labels whatsoever.
+>>* Various other transformations exist.
+>>>1. **label powerset (LP) transformation** creates one binary classifier for every label combination attested in the training set.
+>>>1. **random k-labelsets (RAKEL) algorithm** uses multiple LP classifiers, each trained on a random subset of the actual labels; prediction using this ensemble method proceeds by a voting scheme.
+>>*. **Some classification algorithms/models have been adapted to the multi-label task, without requiring problem transformations**
+>>>1. **boosting**: AdaBoost.MH and AdaBoost.MR are extended versions of AdaBoost for multi-label data.
+>>>2. **k-nearest neighbors**: the ML-kNN algorithm extends the k-NN classifier to multi-label data.[8]
+>>>3. **decision trees**: "Clare" is an adapted C4.5 algorithm for multi-label classification; the modification involves the entropy calculations.
+>>>>* MMC, MMDT, and SSC refined MMDT, can classify multi-labeled data based on multi-valued attributes without transforming the attributes into single-values. They are also named multi-valued and multi-labeled decision tree classification methods.[10][11][12]
+>>>4. **kernel methods**: for vector output
+>>>5. **neural networks**: BP-MLL is an adaptation of the popular back-propagation algorithm for multi-label learning 
 
-
-
+ 

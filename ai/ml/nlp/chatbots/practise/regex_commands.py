@@ -2,6 +2,12 @@
 
 import re
 
+re.match('abc', 'abcdef')
+# <_sre.SRE_Match object; span=(0, 3), match='abc'>
+word_regex = '\w+'
+re.match(word_regex, 'hi there!')
+# <_sre.SRE_Match object; span=(0, 2), match='hi'>
+
 # '|' is equivalent to OR
 # we put r in front of a string, it is called a raw string which means we can include
 # the special characters like backslash without clashing the default python string behaviour
@@ -24,3 +30,5 @@ Amandeep from India is a very good boy
 He love to explore Machine Learning use-cases'''
 # findall method returns all the matching substrings:
 print(pattern.findall(message))
+
+

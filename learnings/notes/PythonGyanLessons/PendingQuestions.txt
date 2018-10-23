@@ -66,3 +66,4 @@ why epoch is what is epoch??
 
 time.process_time()
 
+clearing the console
