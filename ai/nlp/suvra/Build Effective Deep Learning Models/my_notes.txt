@@ -1,0 +1,71 @@
+Neural networks for deep learning:
+
+
+Hurdles for Neural Network
+Some of the major issues faced by neural networks are:
+ 1. Efficiency: The time taken to train a neural network.
+ 2. Accuracy: How accurately the network performs on new data.
+ 3. Data availability: The size and complexity of data available to train the network.
+
+
+Problems Faced by a Trained Network
+Once you have finished training a neural network, you may find that in spite of the minimal cost of train data your model's prediction is not as expected on test data. This kind of scenario is known as the bias-variance problem.
+
+Bias and Variance
+A model is said to be biased when it fails to learn all the important features that influences the output.
+It generalizes the data to such an extent that in spite of many features available to consider the model ends up considering just a few features (maybe one or two) to make its prediction.
+In such scenario, even the accuracy of the model on train data will be very low.
+
+Variance
+The variance problem is opposite to what you saw in bias problem.
+The model is said to be suffering from the variance if it learns all the features from the data including irrelevant information (also referred to as noise).
+This type of model performs very well on train data (sometimes with 100% accuracy) but very poorly on test data.
+
+
+
+Analyzing Performance
+As you saw in the previous card, we can analyze the bias and variance problem from the visual plotting of the model assuming the data had only two features.
+But in a real scenario, the data has n features and it is hard and time-consuming to plot the data to infer the model performance.
+As an alternative to this before training, we need to divide the data into a train, dev (development set) and test set.
+By analyzing the performance of the model on these three datasets, we can infer whether the model is suffering from bias or variance.
+
+
+Train, Dev, and Test Set
+Train data: The data sample used to fit the model (training the model). It comprises around 70 to 90 percent of available data.
+Dev set: The data sample meant to measure the performance of the trained model to iteratively fine-tune the parameters until the model performs well on this data.
+Test data: The data sample on which you test your final model to build the confidence that your model works as expected.
+
+
+Inference
+
+Case 1:
+If train error more than acceptable range, e.g., 80%
+The model is highly biased.
+
+Case 2:
+If train error is less than dev set error, e.g., train error 2% and dev error 30%.
+The model is suffering from the variance.
+
+Case 3:
+If test error is much larger than train and dev error, e.g., train error 10%, dev error 10%, and test error 60%.
+The model is overfitting to both train and dev dataset.
+
+
+Overfitting
+The model suffers from the variance when train data is not large enough.
+When the train data is too small, the model memorizes the data and all it knows is to recall the train data.
+Hence, it shows better accuracy on training data but performs poorly on unseen data (test data).
+This scenario is known as overfitting.
+
+
+Overcome overfitting
+One way to overcome overfitting is to get more data samples for training.
+But this turns out to be expensive in terms of both time and cost.
+Given this situation, we can improve the performance by applying the technique called regularization.
+
+
+Regularization
+During overfitting, the model fails to generalize its predictions since it allocates larger weights to irrelevant features (also known as noise).
+Regularization penalizes the model when weights tend to go too large by adding an extra term to cost function called regularization term.
+Regularization term is the function of weight.
+There are two types of regularization called L1 regularization and L2 regularization.
