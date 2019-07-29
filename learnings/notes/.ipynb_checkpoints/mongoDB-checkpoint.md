@@ -31,3 +31,13 @@
     db.movieDetails.find({boxOffice: {$elemMatch: {"country": "Germany", "revenue": {$gt: 16}}}})
     
 ```
+
+* Insert new field in every document:
+```javascript
+db.gsk_feedback.update(
+  {},
+  { $set: {"app_version": "v1"} },
+  false,
+  true
+)
+```
