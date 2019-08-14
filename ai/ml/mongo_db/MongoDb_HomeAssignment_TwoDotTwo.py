@@ -24,3 +24,6 @@ print("Total items deleted: ",count)
 #         lowest_score.append(record)
 #     temp_id = record['student_id']
 # len(lowest_score)
+
+# How to view document fields in mongo shell?
+Object.keys(db.gsk_feedback.findOne())
